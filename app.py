@@ -19,7 +19,7 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v35.1 | Fixed Contact", 
+    page_title="Titan v35.2 | Dark Mode Fixed", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
@@ -74,7 +74,7 @@ st.markdown("""
 # --- 3. SIDEBAR: THE CONTROL CENTER ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v35.1 | AI, PWA & Commerce")
+    st.caption("v35.2 | Visuals Corrected")
     st.divider()
     
     # --- FEATURE 1: TITAN AI GENERATOR ---
@@ -155,7 +155,7 @@ with st.sidebar:
         og_image = st.text_input("Social Share Image URL")
 
 # --- 4. MAIN WORKSPACE ---
-st.title("🏗️ StopWebRent Site Builder v35.1")
+st.title("🏗️ StopWebRent Site Builder v35.2")
 
 tabs = st.tabs(["1. Identity & PWA", "2. Content Blocks", "3. Pricing Logic", "4. Store & Payments", "5. Booking", "6. Blog Engine", "7. Legal & Footer"])
 
@@ -452,6 +452,11 @@ def get_theme_css():
     
     .card {{ background: var(--card); padding: 2rem; border-radius: var(--radius); border: 1px solid rgba(100,100,100,0.1); transition: 0.3s; height: 100%; display: flex; flex-direction: column; }}
     .card:hover {{ transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: var(--s); }}
+    
+    /* DARK MODE FIX: FORCE CARD TEXT TO USE TEXT COLOR */
+    .card h1, .card h2, .card h3, .card h4, .card h5, .card h6, .card a {{ color: var(--txt) !important; text-decoration: none; }}
+    .card p {{ color: var(--txt); opacity: 0.9; }}
+    
     .prod-img {{ width: 100%; height: 250px; object-fit: cover; border-radius: calc(var(--radius) - 4px); margin-bottom: 1.5rem; background: #f1f5f9; }}
     
     /* PRICING & FAQ */
@@ -580,7 +585,7 @@ def gen_features():
                 icon_code = get_simple_icon(parts[0])
                 title = parts[1].strip()
                 desc = parts[2].strip()
-                cards += f"""<div class="card reveal"><div style="color:var(--s); margin-bottom:1rem;">{icon_code}</div><h3 style="color:var(--p); font-size:1.2rem; text-transform:uppercase; letter-spacing:1px;">{title}</h3><div style="opacity:0.9; color:var(--txt); font-size:0.95rem;">{format_text(desc)}</div></div>"""
+                cards += f"""<div class="card reveal"><div style="color:var(--s); margin-bottom:1rem;">{icon_code}</div><h3>{title}</h3><div>{format_text(desc)}</div></div>"""
     return f"""<section id="features"><div class="container"><div class="section-head reveal"><h2>{f_title}</h2></div><div class="grid-3">{cards}</div></div></section>"""
 
 def gen_stats():
@@ -717,7 +722,7 @@ def gen_lang_script():
     """
 
 def gen_inventory_js(is_demo=False):
-    # UPDATED: Checks for Stripe Link in Column 4 (Index 4)
+    # UPDATED: Removed hardcoded color:var(--p) to fix dark mode
     demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
     return f"""
     {gen_csv_parser()}
@@ -746,7 +751,7 @@ def gen_inventory_js(is_demo=False):
                     <div class="card reveal">
                         <img src="${{img}}" class="prod-img" loading="lazy">
                         <div>
-                            <h3 style="color:var(--p);">${{c[0]}}</h3>
+                            <h3>${{c[0]}}</h3>
                             <p style="font-weight:bold; color:var(--s);">${{c[1]}}</p>
                             <p style="font-size:0.9rem; opacity:0.8;">${{c[2]}}</p>
                             ${{btn}}
@@ -797,7 +802,7 @@ def gen_footer():
     # (Preserved Social Icons & Layout)
     icons = ""
     if fb_link: icons += f'<a href="{fb_link}" target="_blank"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>'
-    if ig_link: icons += f'<a href="{ig_link}" target="_blank" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
+    if ig_link: icons += f'<a href="{ig_link}" target="_blank" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
     if x_link: icons += f'<a href="{x_link}" target="_blank" aria-label="X (Twitter)"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>'
     if li_link: icons += f'<a href="{li_link}" target="_blank" aria-label="LinkedIn"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>'
     if yt_link: icons += f'<a href="{yt_link}" target="_blank" aria-label="YouTube"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>'
@@ -907,6 +912,7 @@ def gen_booking_content():
     """
 
 def gen_blog_index_html():
+    # UPDATED: Removed inline color style so CSS handles dark mode
     return f"""
     <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
         <div class="container"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
@@ -1038,19 +1044,16 @@ if show_cta: home_content += f'<section style="background:var(--s); color:white;
 st.divider()
 st.subheader("🚀 Launchpad")
 
-# RESTORED RADIO BUTTONS FOR PREVIEW
 preview_mode = st.radio(
     "Preview Page:", 
     ["Home", "About", "Contact", "Blog Index", "Blog Post (Demo)", "Privacy", "Terms", "Product Detail (Demo)", "Booking Page"], 
     horizontal=True
 )
 
-# === CRITICAL FIX: CORRECT CONTACT PAGE CONTENT VARIABLE ===
 contact_content = f"""
 {gen_inner_header("Contact Us")}
 <section>
     <div class="container">
-        <!-- FIXED: Class instead of inline style -->
         <div class="contact-grid">
             <div>
                 <div style="background:var(--card); padding:2rem; border-radius:12px; border:1px solid #eee;">
@@ -1085,13 +1088,11 @@ contact_content = f"""
 
 c1, c2 = st.columns([3, 1])
 with c1:
-    # PREVIEW LOGIC
     if preview_mode == "Home": 
         st.components.v1.html(build_page("Home", home_content), height=600, scrolling=True)
     elif preview_mode == "About": 
         st.components.v1.html(build_page("About", f"{gen_inner_header('About')}<div class='container'>{format_text(about_long)}</div>"), height=600, scrolling=True)
     elif preview_mode == "Contact": 
-        # UPDATED: Using the full layout variable now
         st.components.v1.html(build_page("Contact", contact_content), height=600, scrolling=True)
     elif preview_mode == "Privacy": 
         st.components.v1.html(build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container'>{format_text(priv_txt)}</div>"), height=600, scrolling=True)
@@ -1112,17 +1113,11 @@ with c2:
     if st.button("DOWNLOAD WEBSITE ZIP", type="primary"):
         z_b = io.BytesIO()
         with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
-            # Standard Pages
             zf.writestr("index.html", build_page("Home", home_content))
             zf.writestr("about.html", build_page("About", f"{gen_inner_header('About')}<div class='container'>{format_text(about_long)}</div>"))
-            
-            # UPDATED: Using the full layout variable
             zf.writestr("contact.html", build_page("Contact", contact_content))
-            
             zf.writestr("privacy.html", build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container'>{format_text(priv_txt)}</div>"))
             zf.writestr("terms.html", build_page("Terms", f"{gen_inner_header('Terms')}<div class='container'>{format_text(term_txt)}</div>"))
-            
-            # Feature Pages
             zf.writestr("booking.html", build_page("Book Now", gen_booking_content()))
             zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
             
@@ -1130,7 +1125,6 @@ with c2:
                 zf.writestr("blog.html", build_page("Blog", gen_blog_index_html()))
                 zf.writestr("post.html", build_page("Article", gen_blog_post_html()))
             
-            # PWA Files
             zf.writestr("manifest.json", gen_pwa_manifest())
             zf.writestr("service-worker.js", gen_sw())
 

@@ -19,7 +19,7 @@ init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Lo
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v35.2 | Dark Mode Fixed", 
+    page_title="Titan v35.3 | Mobile Fixed", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
@@ -74,7 +74,7 @@ st.markdown("""
 # --- 3. SIDEBAR: THE CONTROL CENTER ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v35.2 | Visuals Corrected")
+    st.caption("v35.3 | Mobile & Share Fix")
     st.divider()
     
     # --- FEATURE 1: TITAN AI GENERATOR ---
@@ -155,7 +155,7 @@ with st.sidebar:
         og_image = st.text_input("Social Share Image URL")
 
 # --- 4. MAIN WORKSPACE ---
-st.title("🏗️ StopWebRent Site Builder v35.2")
+st.title("🏗️ StopWebRent Site Builder v35.3")
 
 tabs = st.tabs(["1. Identity & PWA", "2. Content Blocks", "3. Pricing Logic", "4. Store & Payments", "5. Booking", "6. Blog Engine", "7. Legal & Footer"])
 
@@ -389,12 +389,24 @@ def get_theme_css():
     @keyframes slideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
     """
 
-    # Added CSS for Shopping Cart Modal
+    # Added CSS for Shopping Cart Modal & SOCIAL SHARE
     cart_css = """
     #cart-float { position: fixed; bottom: 100px; right: 30px; background: var(--p); color: white; padding: 15px 20px; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 998; display: flex; align-items: center; gap: 10px; font-weight: bold; }
     #cart-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); width: 90%; max-width: 500px; padding: 2rem; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 1001; border: 1px solid rgba(128,128,128,0.2); }
     #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
+    
+    /* SOCIAL SHARE STYLES */
+    .share-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .share-label { font-weight: bold; margin-right: 5px; font-size: 0.9rem; align-self: center; }
+    .share-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; transition: 0.3s; border: none; cursor: pointer; text-decoration: none; }
+    .share-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+    .share-btn svg { width: 18px; height: 18px; fill: white; }
+    .bg-fb { background: #1877F2; }
+    .bg-x { background: #000000; }
+    .bg-li { background: #0A66C2; }
+    .bg-wa { background: #25D366; }
+    .bg-rd { background: #FF4500; }
     """
 
     return f"""
@@ -480,17 +492,10 @@ def get_theme_css():
 
     /* BLOG & SHARE */
     .blog-badge {{ background: var(--s); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; width: fit-content; margin-bottom: 1rem; display:inline-block; }}
-    .share-row {{ display: flex; gap: 0.8rem; margin-top: 2rem; align-items: center; flex-wrap: wrap; }}
-    .share-btn {{ width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; transition: 0.3s; border: none; cursor: pointer; text-decoration: none; }}
-    .share-btn:hover {{ transform: translateY(-3px); filter: brightness(1.1); }}
-    .share-btn svg {{ width: 18px; height: 18px; fill: white; }}
-    .bg-fb {{ background: #1877F2; }}
-    .bg-x {{ background: #000000; }}
-    .bg-li {{ background: #0A66C2; }}
-    .bg-link {{ background: #64748b; }}
     
     {anim_css}
     
+    /* MOBILE OPTIMIZATIONS (FIXED) */
     @media (max-width: 768px) {{
         .nav-links {{ 
             position: fixed; top: 70px; left: -100%; width: 100%; height: calc(100vh - 70px); 
@@ -500,11 +505,21 @@ def get_theme_css():
         .nav-links.active {{ left: 0; }}
         .nav-links a {{ margin-left: 0; font-size: 1.2rem; }}
         .mobile-menu {{ display: block; }}
+        
         .hero {{ min-height: 60vh; padding-top: 100px; }}
         .about-grid, .contact-grid, .detail-view {{ grid-template-columns: 1fr !important; gap: 2rem; }}
+        
+        /* Mobile Image Sizing Fix */
+        .prod-img, .about-grid img {{ height: auto !important; aspect-ratio: 16/9; }}
+        
+        /* Padding Fixes for Mobile */
+        .container {{ padding: 0 1.5rem; }}
+        
         .btn {{ width: 100%; margin-bottom: 0.5rem; }}
         .hero-content .btn {{ width: auto; }}
-        #cart-float {{ bottom: 90px; right: 20px; }}
+        
+        /* Cart Position Adjustment */
+        #cart-float {{ bottom: 110px; right: 20px; }}
     }}
     """
 
@@ -722,7 +737,6 @@ def gen_lang_script():
     """
 
 def gen_inventory_js(is_demo=False):
-    # UPDATED: Removed hardcoded color:var(--p) to fix dark mode
     demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
     return f"""
     {gen_csv_parser()}
@@ -802,7 +816,7 @@ def gen_footer():
     # (Preserved Social Icons & Layout)
     icons = ""
     if fb_link: icons += f'<a href="{fb_link}" target="_blank"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>'
-    if ig_link: icons += f'<a href="{ig_link}" target="_blank" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
+    if ig_link: icons += f'<a href="{ig_link}" target="_blank" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
     if x_link: icons += f'<a href="{x_link}" target="_blank" aria-label="X (Twitter)"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>'
     if li_link: icons += f'<a href="{li_link}" target="_blank" aria-label="LinkedIn"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>'
     if yt_link: icons += f'<a href="{yt_link}" target="_blank" aria-label="YouTube"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>'
@@ -912,7 +926,6 @@ def gen_booking_content():
     """
 
 def gen_blog_index_html():
-    # UPDATED: Removed inline color style so CSS handles dark mode
     return f"""
     <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
         <div class="container"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
@@ -939,6 +952,7 @@ def gen_blog_index_html():
     </script>
     """
 
+# --- UPDATED PRODUCT PAGE WITH SOCIAL SHARE ---
 def gen_product_page_content(is_demo=False):
     demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
     return f"""
@@ -963,6 +977,9 @@ def gen_product_page_content(is_demo=False):
                     let stripe = (clean.length > 4 && clean[4].includes('http')) ? clean[4] : '';
                     let btn = stripe ? `<a href="${{stripe}}" class="btn btn-primary">Buy Now</a>` : `<button onclick="addToCart('${{clean[0]}}', '${{clean[1]}}')" class="btn btn-primary">Add to Cart</button>`;
                     
+                    const u = encodeURIComponent(window.location.href);
+                    const t = encodeURIComponent(clean[0]);
+                    
                     document.getElementById('product-detail').innerHTML = `
                         <div class="detail-view">
                             <img src="${{img}}" style="width:100%; border-radius:12px;">
@@ -971,7 +988,16 @@ def gen_product_page_content(is_demo=False):
                                 <p style="font-size:1.5rem; color:var(--s); font-weight:bold; margin-bottom:1.5rem;">${{clean[1]}}</p>
                                 <p>${{clean[2]}}</p>
                                 ${{btn}}
-                                <button onclick="shareWA(window.location.href, '${{clean[0]}}')" class="btn" style="background:#eee; color:#333; margin-top:1rem;">Share</button>
+                                
+                                <div style="margin-top:2rem; border-top:1px solid #eee; padding-top:1rem;">
+                                    <p style="font-size:0.9rem; font-weight:bold;">Share Product:</p>
+                                    <div class="share-row">
+                                        <a href="https://wa.me/?text=${{t}}%20${{u}}" target="_blank" class="share-btn bg-wa"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${{u}}" target="_blank" class="share-btn bg-fb"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                                        <a href="https://twitter.com/intent/tweet?url=${{u}}&text=${{t}}" target="_blank" class="share-btn bg-x"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${{u}}" target="_blank" class="share-btn bg-li"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -984,9 +1010,10 @@ def gen_product_page_content(is_demo=False):
     </script>
     """
 
+# --- UPDATED BLOG POST WITH MOBILE PADDING FIX & SOCIAL SHARE ---
 def gen_blog_post_html():
     return f"""
-    <div id="post-container" style="padding-top:100px;">Loading...</div>
+    <div id="post-container" style="padding-top:70px;">Loading...</div>
     {gen_csv_parser()}
     <script>
     async function loadPost() {{
@@ -1001,16 +1028,30 @@ def gen_blog_post_html():
                 const r = parseCSVLine(lines[i]);
                 if(r[0] === slug) {{
                     const contentHtml = parseMarkdown(r[6]);
+                    const u = encodeURIComponent(window.location.href);
+                    const t = encodeURIComponent(r[1]);
+                    
                     container.innerHTML = `
-                        <div style="background:var(--p); padding:6rem 0 4rem 0; color:white; text-align:center;">
+                        <div style="background:var(--p); padding:clamp(3rem, 8vw, 6rem) 1rem; color:white; text-align:center;">
                             <div class="container">
                                 <span class="blog-badge">${{r[3]}}</span>
-                                <h1>${{r[1]}}</h1>
+                                <h1 style="font-size:clamp(1.8rem, 5vw, 3.5rem); margin-top:1rem;">${{r[1]}}</h1>
                             </div>
                         </div>
-                        <div class="container" style="max-width:800px; padding:4rem 1rem;">
+                        <div class="container" style="max-width:800px; padding:3rem 1.5rem;">
                             <img src="${{r[5]}}" style="width:100%; border-radius:12px; margin-bottom:2rem;">
                             <div style="line-height:1.8;">${{contentHtml}}</div>
+                            
+                            <div style="margin-top:3rem; border-top:1px solid #eee; padding-top:1.5rem;">
+                                <p style="font-weight:bold;">Share this article:</p>
+                                <div class="share-row">
+                                    <a href="https://wa.me/?text=${{t}}%20${{u}}" target="_blank" class="share-btn bg-wa"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></path></svg></a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${{u}}" target="_blank" class="share-btn bg-fb"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                                    <a href="https://twitter.com/intent/tweet?url=${{u}}&text=${{t}}" target="_blank" class="share-btn bg-x"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${{u}}" target="_blank" class="share-btn bg-li"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>
+                                    <a href="https://reddit.com/submit?url=${{u}}&title=${{t}}" target="_blank" class="share-btn bg-rd"><svg viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></path></svg></a>
+                                </div>
+                            </div>
                             <a href="blog.html" class="btn btn-primary" style="margin-top:2rem;">&larr; Back to Blog</a>
                         </div>
                     `;
@@ -1040,7 +1081,7 @@ if show_testimonials:
 if show_faq: home_content += gen_faq_section()
 if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Start Owning Your Future</h2><p style="margin-bottom:2rem;">Stop paying rent.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get Started</a></div></section>'
 
-# --- 7. DEPLOYMENT & RESTORED PREVIEW ---
+# --- 7. DEPLOYMENT & PREVIEW ---
 st.divider()
 st.subheader("🚀 Launchpad")
 

@@ -4,10 +4,10 @@ import io
 import json
 import datetime
 import re
-import requests # Added for Titan AI
+import requests  # Required for AI
 
-# --- 0. STATE MANAGEMENT (CRITICAL FOR AI) ---
-# We must initialize state so the AI can overwrite the text inputs
+# --- 0. STATE MANAGEMENT (AI INTEGRATION) ---
+# Initialize session state so AI can overwrite text inputs dynamically
 def init_state(key, default_val):
     if key not in st.session_state:
         st.session_state[key] = default_val
@@ -16,18 +16,17 @@ init_state('hero_h', "Stop Paying Rent for Your Website.")
 init_state('hero_sub', "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees. Pay once. Own it forever.")
 init_state('about_h', "Control Your Empire from a Spreadsheet")
 init_state('about_short', "No WordPress dashboard. No plugins to update. Just open your private Google Sheet, change a text, and watch your site update globally in seconds.")
-init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Loading**. While traditional sites take 3–5s, Titan loads instantly.\nwallet | The Economic Pillar | **$0 Monthly Fees**. We eliminated hosting subscriptions.\ntable | The Functional Pillar | **Google Sheets CMS**. Update prices and photos directly from a simple spreadsheet.\nshield | The Authority Pillar | **Unhackable Security**. Zero-DB Architecture removes the hacker's primary entry point.")
+init_state('feat_data', "bolt | The Performance Pillar | **0.1s High-Velocity Loading**. While traditional sites take 3–5s, Titan loads instantly.\nwallet | The Economic Pillar | **$0 Monthly Fees**. We eliminated hosting subscriptions.\ntable | The Functional Pillar | **Google Sheets CMS**. Update prices and photos directly from a simple spreadsheet.\nshield | The Authority Pillar | **Unhackable Security**. Zero-DB Architecture removes the hacker's primary entry point.\nlayers | The Reliability Pillar | **Global Edge Deployment**. Distributed across 100+ servers worldwide.\nstar | The Conversion Pillar | **One-Tap WhatsApp**. Direct-to-Chat technology.")
 
 # --- 1. APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Titan v35.0 | AI + PWA + Commerce", 
+    page_title="Titan v35.0 | AI + Commerce", 
     layout="wide", 
     page_icon="⚡",
     initial_sidebar_state="expanded"
 )
 
-# --- 2. ADVANCED UI SYSTEM (CSS FOR BUILDER) ---
-# [PRESERVED ORIGINAL CSS]
+# --- 2. ADVANCED UI SYSTEM (CSS) ---
 st.markdown("""
     <style>
     /* UI Reset & Variables */
@@ -68,7 +67,7 @@ st.markdown("""
     }
     .stButton>button:hover { transform: translateY(-2px); }
     
-    /* NEW: AI Badge Style */
+    /* AI Badge */
     .ai-badge { background: #6366f1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; margin-left: 5px; }
     </style>
     """, unsafe_allow_html=True)
@@ -76,20 +75,20 @@ st.markdown("""
 # --- 3. SIDEBAR: THE CONTROL CENTER ---
 with st.sidebar:
     st.title("Titan Architect")
-    st.caption("v35.0 | AI, PWA & Payment Integration")
+    st.caption("v35.0 | AI, PWA & Commerce")
+    st.divider()
     
-    # --- NEW FEATURE: TITAN AI GENERATOR ---
+    # --- FEATURE 1: TITAN AI GENERATOR ---
     with st.expander("🤖 Titan AI Generator", expanded=True):
         st.info("Auto-write your website content.")
         groq_key = st.text_input("Groq API Key (Free)", type="password", help="Get at console.groq.com")
-        biz_desc = st.text_input("Business Type", placeholder="e.g. Luxury Dentist in Dubai")
+        biz_desc = st.text_input("Business Description", placeholder="e.g. Luxury Dental Clinic in Dubai")
         if st.button("✨ Generate Copy"):
             if not groq_key or not biz_desc:
                 st.error("Key & Description required.")
             else:
                 try:
                     with st.spinner("Titan AI is writing..."):
-                        # Free Llama 3 via Groq
                         url = "https://api.groq.com/openai/v1/chat/completions"
                         headers = {"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"}
                         prompt = f"""
@@ -112,9 +111,7 @@ with st.sidebar:
                 except Exception as e:
                     st.error(f"AI Error: {e}")
 
-    st.divider()
-    
-    # 3.1 VISUAL DNA (Preserved)
+    # 3.1 VISUAL DNA
     with st.expander("🎨 Visual DNA", expanded=False):
         theme_mode = st.selectbox("Base Theme", [
             "Clean Corporate (Light)", "Midnight SaaS (Dark)", "Glassmorphism (Blur)",
@@ -132,7 +129,7 @@ with st.sidebar:
         border_rad = st.select_slider("Corner Roundness", ["0px", "4px", "12px", "24px", "40px"], value="12px")
         anim_type = st.selectbox("Animation Style", ["Fade Up", "Zoom In", "Slide Right", "None"])
 
-    # 3.2 MODULE MANAGER (Updated with Booking)
+    # 3.2 MODULE MANAGER
     with st.expander("🧩 Section Manager", expanded=False):
         st.caption("Toggle sections to include:")
         show_hero = st.checkbox("Hero Carousel", value=True)
@@ -161,7 +158,6 @@ with st.sidebar:
 # --- 4. MAIN WORKSPACE ---
 st.title("🏗️ StopWebRent Site Builder v35")
 
-# Added "Booking" and "Global/PWA" tabs
 tabs = st.tabs(["1. Identity & PWA", "2. Content Blocks", "3. Pricing Logic", "4. Store & Payments", "5. Booking", "6. Blog Engine", "7. Legal & Footer"])
 
 with tabs[0]:
@@ -175,21 +171,21 @@ with tabs[0]:
         prod_url = st.text_input("Website URL", "https://www.stopwebrent.com")
         biz_addr = st.text_area("Address", "Kaydiem Script Lab\nKanishka’s House, Garia Station Rd\nKolkata, West Bengal 700084, India", height=100)
         map_iframe = st.text_area("Google Map Embed Code", placeholder='<iframe src="..."></iframe>', height=100)
-        seo_d = st.text_area("Meta Description (SEO)", "Stop paying monthly fees for Wix or Shopify. The Titan Engine builds ultra-fast (0.1s) websites with $0 hosting costs.", height=100)
+        seo_d = st.text_area("Meta Description (SEO)", "Stop paying monthly fees for Wix or Shopify. The Titan Engine builds ultra-fast (0.1s) websites with $0 hosting costs. Pay once, own your code forever.", height=100)
         logo_url = st.text_input("Logo URL (PNG/SVG)")
 
-    # --- NEW: PWA SETTINGS ---
+    # --- FEATURE 4: PWA SETTINGS ---
     st.subheader("📱 Progressive Web App (PWA)")
     st.info("Makes your website installable as an App on Android/iOS.")
     pwa_short = st.text_input("App Short Name", biz_name[:12])
     pwa_desc = st.text_input("App Description", "Official App")
     pwa_icon = st.text_input("App Icon (512x512 PNG)", logo_url)
 
-    # --- NEW: MULTI-LANGUAGE ---
+    # --- FEATURE 5: MULTI-LANGUAGE ---
     st.subheader("🌍 Multi-Language Smart Switch")
-    st.info("Provide a second Google Sheet URL with translations. Columns must match the HTML Element IDs.")
+    st.info("Provide a second Google Sheet URL with translations. Columns: `ElementID`, `TranslatedText`.")
     lang_sheet = st.text_input("Translation Sheet CSV URL (Optional)")
-
+        
     st.subheader("Social Links")
     sc1, sc2, sc3 = st.columns(3)
     fb_link = sc1.text_input("Facebook URL")
@@ -238,7 +234,7 @@ with tabs[1]:
     
     c_a1, c_a2 = st.columns(2)
     about_short_in = c_a1.text_area("Home Page Summary (Short)", key="about_short", height=200)
-    about_long = c_a2.text_area("Full About Page Content (Long)", "**The Digital Landlord Trap**\nMost business owners don't realize they are trapped...", height=200)
+    about_long = c_a2.text_area("Full About Page Content (Long)", "**The Digital Landlord Trap**\nMost business owners don't realize they are trapped in a rental cycle. Platforms like Wix, Squarespace, and Shopify act as Digital Landlords. They charge you rent every single month to keep your business online. If you stop paying, they delete your website. Over 5 years, a cheap $29/mo website actually drains over $1,700 from your pocket.\n\n**The Titan Philosophy: Ownership**\nAt StopWebRent.com, we believe you should own your digital home, not rent it. We reject bloatware, heavy databases, and recurring subscription models. Our mission is to democratize Enterprise Grade technology for small business owners.\n\n**How We Achieve $0 Monthly Fees**\nWe utilize Static Site Architecture. Unlike traditional sites that require a heavy server running 24/7 (costing money), Titan sites are pre-built and live on the Global Edge (CDN).", height=200)
 
 with tabs[2]:
     st.subheader("💰 Pricing Comparison Table")
@@ -256,6 +252,7 @@ with tabs[3]:
     sheet_url = st.text_input("Google Sheet CSV Link", placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv")
     custom_feat = st.text_input("Default Product Image URL (Fallback)", "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800")
     
+    # --- FEATURE 2: PAYMENTS ---
     st.markdown("### 💳 Payment Gateways")
     st.caption("We have added a Shopping Cart (Cart.js) and direct payment links.")
     col_pay1, col_pay2 = st.columns(2)
@@ -270,7 +267,7 @@ with tabs[3]:
     """)
 
 with tabs[4]:
-    # --- NEW: BOOKING ENGINE ---
+    # --- FEATURE 3: BOOKING ENGINE ---
     st.subheader("📅 One-Click Booking Engine")
     st.info("Integrate Calendly, Cal.com or Google Calendar.")
     booking_embed = st.text_area("Paste Embed Code (iframe)", height=150, placeholder='<iframe src="https://calendly.com/yourname" width="100%" height="600"></iframe>')
@@ -286,16 +283,15 @@ with tabs[5]:
 
 with tabs[6]:
     st.subheader("Trust & Legal")
-    testi_data = st.text_area("Testimonials (Name | Quote)", "Rajesh Gupta, HVAC Owner | I was paying Wix $35/month... Titan built me a faster site.\nSarah Jenkins, Cafe Owner | Updating my menu used to be a nightmare... now it's easy.", height=100)
-    faq_data = st.text_area("FAQ Data (Q? ? A)", "Do I really pay $0 for hosting? ? Yes. We utilize 'Static Site Architecture'.\nIs it secure? ? It is safer than WordPress.", height=100)
+    testi_data = st.text_area("Testimonials (Name | Quote)", "Rajesh Gupta, HVAC Business Owner | I was paying Wix $35/month for 3 years. Titan built me a faster site for a one-time fee. I stopped the bleeding and finally own my asset.\nSarah Jenkins, Cafe Owner | Updating my menu used to be a nightmare on WordPress. Now, I just open a Google Sheet on my phone, change the price, and it updates the website instantly.\nDavid Miller, Financial Consultant | Speed is everything for SEO. My old site took 4 seconds to load. My new Titan site loads in 0.1 seconds. My Google ranking jumped to Page 1 within a month.", height=100)
+    faq_data = st.text_area("FAQ Data (Q? ? A)", "Do I really pay $0 for hosting? ? Yes. We utilize 'Static Site Architecture' which allows your site to be hosted on Enterprise CDNs (like Netlify/Vercel) within their generous free tiers for small businesses.\nWhat about my Domain Name? ? You pay that directly to the registrar (like GoDaddy or Namecheap). It usually costs ~$15/year. We do not mark this up.\nCan I add a blog later? ? Yes. The Titan Engine is scalable. We can add a blog, gallery, or more pages for a one-time expansion fee.\nIs it secure? ? It is safer than WordPress. Because there is no database to hack, your site is virtually impenetrable to common SQL injection attacks.", height=100)
     l1, l2 = st.columns(2)
-    priv_txt = l1.text_area("Privacy Policy Text", "**1. Introduction**\nWe collect minimum data...", height=200)
-    term_txt = l2.text_area("Terms of Service Text", "**1. Service Agreement**\nBy engaging StopWebRent.com...", height=200)
+    priv_txt = l1.text_area("Privacy Policy Text", "**1. Introduction & Digital Sovereignty**\nAt StopWebRent.com (operated by Kaydiem Script Lab), we treat data privacy not just as a compliance requirement, but as a fundamental architectural feature. We collect the absolute minimum amount of data required to engineer, deploy, and maintain your digital asset. This Privacy Policy outlines how we handle your information under the jurisdiction of West Bengal, India, while respecting global standards.\n\n**2. Information We Collect**\nTo provide our Titan Engine services, we collect Identity Data, Contact Data, and Technical Data (your Google Sheet ID).\n\n**3. The Static Site Privacy Advantage**\nUnlike traditional WordPress sites that store user data in complex databases (vulnerable to hacking), the websites we build for you are Static. They do not inherently store your customers data on our servers. This Zero-DB Architecture inherently reduces your liability and privacy risk.", height=200)
+    term_txt = l2.text_area("Terms of Service Text", "**1. Service Agreement**\nBy engaging StopWebRent.com (Kaydiem Script Lab) for web development services, you agree to these Terms. We provide Static Website Architecture designed for speed and cost-efficiency.\n\n**2. Payment & Fees**\nYou agree to pay the one-time architectural setup fee (e.g., $199) as advertised. StopWebRent.com does not charge monthly maintenance or hosting fees. The Client is responsible for their own Domain Name renewal fees.\n\n**3. Intellectual Property (The Ownership Clause)**\nUpon settlement of the final invoice, full intellectual property rights and source code ownership are transferred to the Client. You are granted a perpetual, worldwide, non-exclusive license to the code.", height=200)
 
 # --- 5. COMPILER ENGINE ---
 
 def format_text(text):
-    """Advanced Text Formatter v30.4 (Preserved)"""
     if not text: return ""
     processed_text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
     lines = processed_text.split('\n')
@@ -364,7 +360,6 @@ def gen_sw():
     """
 
 def get_theme_css():
-    # ... (Keep existing Theme Logic completely intact) ...
     bg_color, text_color, card_bg, glass_nav = "#ffffff", "#0f172a", "#ffffff", "rgba(255, 255, 255, 0.95)"
     
     if "Midnight" in theme_mode:
@@ -803,7 +798,10 @@ def gen_footer():
     # (Preserved Social Icons & Layout)
     icons = ""
     if fb_link: icons += f'<a href="{fb_link}" target="_blank"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>'
-    # ... (other icons preserved similarly for brevity in display, but included in logic) ...
+    if ig_link: icons += f'<a href="{ig_link}" target="_blank" aria-label="Instagram"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zM7.17 2.1c-1.4 0-2.6.48-3.46 1.33c-.85.85-1.33 2.06-1.33 3.46v10.3c0 1.3.47 2.5 1.33 3.36c.86.85 2.06 1.33 3.46 1.33h9.66c1.4 0 2.6-.48 3.46-1.33c.85-.85 1.33-2.06 1.33-3.46V6.89c0-1.4-.47-2.6-1.33-3.46c-.86-.85-2.06-1.33-3.46-1.33H7.17zm11.97 3.33c.77 0 1.4.63 1.4 1.4c0 .77-.63 1.4-1.4 1.4c-.77 0-1.4-.63-1.4-1.4c0-.77.63-1.4 1.4-1.4zM12 5.76c3.39 0 6.14 2.75 6.14 6.14c0 3.39-2.75 6.14-6.14 6.14c-3.39 0-6.14-2.75-6.14-6.14c0-3.39 2.75-6.14 6.14-6.14zm0 2.1c-2.2 0-3.99 1.79-3.99 4.04c0 2.25 1.79 4.04 3.99 4.04c2.2 0 3.99-1.79 3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04c0-2.25-1.79-4.04-3.99-4.04z"/></svg></a>'
+    if x_link: icons += f'<a href="{x_link}" target="_blank" aria-label="X (Twitter)"><svg class="social-icon" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>'
+    if li_link: icons += f'<a href="{li_link}" target="_blank" aria-label="LinkedIn"><svg class="social-icon" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></a>'
+    if yt_link: icons += f'<a href="{yt_link}" target="_blank" aria-label="YouTube"><svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>'
 
     return f"""
     <footer><div class="container">
@@ -902,16 +900,14 @@ def gen_booking_content():
     </section>
     <section>
         <div class="container" style="text-align:center;">
-            <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.1); width:100%;">
                 {booking_embed}
             </div>
         </div>
     </section>
     """
 
-# (Blog and Product Generators from v33 preserved)
 def gen_blog_index_html():
-    # ... (Exact logic from previous file) ...
     return f"""
     <section class="hero" style="min-height:40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover;">
         <div class="container"><h1>{blog_hero_title}</h1><p>{blog_hero_sub}</p></div>
@@ -939,11 +935,88 @@ def gen_blog_index_html():
     """
 
 def gen_product_page_content(is_demo=False):
-    # ... (Preserved logic with Social Share) ...
-    return f"""<section style="padding-top:150px;"><div class="container"><div id="product-detail">Loading...</div></div></section>{gen_inventory_js(is_demo)}"""
+    demo_flag = "const isDemo = true;" if is_demo else "const isDemo = false;"
+    return f"""
+    <section style="padding-top:150px;"><div class="container"><div id="product-detail">Loading...</div></div></section>
+    {gen_csv_parser()}
+    <script>
+    {demo_flag}
+    function shareWA(url, title) {{ window.open('https://wa.me/?text=' + encodeURIComponent(title + ' ' + url), '_blank'); }}
+    async function loadProduct() {{
+        const params = new URLSearchParams(window.location.search);
+        let targetName = params.get('item');
+        if(isDemo && !targetName) targetName = "Demo Item";
+        try {{
+            const res = await fetch('{sheet_url}');
+            const txt = await res.text();
+            const lines = txt.split(/\\r\\n|\\n/);
+            for(let i=1; i<lines.length; i++) {{
+                const clean = parseCSVLine(lines[i]);
+                if(isDemo) targetName = clean[0];
+                if(clean[0] === targetName) {{
+                    let img = clean[3] || '{custom_feat}';
+                    let stripe = (clean.length > 4 && clean[4].includes('http')) ? clean[4] : '';
+                    let btn = stripe ? `<a href="${{stripe}}" class="btn btn-primary">Buy Now</a>` : `<button onclick="addToCart('${{clean[0]}}', '${{clean[1]}}')" class="btn btn-primary">Add to Cart</button>`;
+                    
+                    document.getElementById('product-detail').innerHTML = `
+                        <div class="detail-view">
+                            <img src="${{img}}" style="width:100%; border-radius:12px;">
+                            <div>
+                                <h1 style="font-size:3rem; line-height:1.1;">${{clean[0]}}</h1>
+                                <p style="font-size:1.5rem; color:var(--s); font-weight:bold; margin-bottom:1.5rem;">${{clean[1]}}</p>
+                                <p>${{clean[2]}}</p>
+                                ${{btn}}
+                                <button onclick="shareWA(window.location.href, '${{clean[0]}}')" class="btn" style="background:#eee; color:#333; margin-top:1rem;">Share</button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    loadProduct();
+    </script>
+    """
 
 def gen_blog_post_html():
-    return f"""<div id="post-container" style="padding-top:100px;">Loading...</div>{gen_csv_parser()}<script>/* Blog Post Load Logic Here (Preserved) */</script>"""
+    return f"""
+    <div id="post-container" style="padding-top:100px;">Loading...</div>
+    {gen_csv_parser()}
+    <script>
+    async function loadPost() {{
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('id');
+        try {{
+            const res = await fetch('{blog_sheet_url}');
+            const txt = await res.text();
+            const lines = txt.split(/\\r\\n|\\n/);
+            const container = document.getElementById('post-container');
+            for(let i=1; i<lines.length; i++) {{
+                const r = parseCSVLine(lines[i]);
+                if(r[0] === slug) {{
+                    const contentHtml = parseMarkdown(r[6]);
+                    container.innerHTML = `
+                        <div style="background:var(--p); padding:6rem 0 4rem 0; color:white; text-align:center;">
+                            <div class="container">
+                                <span class="blog-badge">${{r[3]}}</span>
+                                <h1>${{r[1]}}</h1>
+                            </div>
+                        </div>
+                        <div class="container" style="max-width:800px; padding:4rem 1rem;">
+                            <img src="${{r[5]}}" style="width:100%; border-radius:12px; margin-bottom:2rem;">
+                            <div style="line-height:1.8;">${{contentHtml}}</div>
+                            <a href="blog.html" class="btn btn-primary" style="margin-top:2rem;">&larr; Back to Blog</a>
+                        </div>
+                    `;
+                    break;
+                }}
+            }}
+        }} catch(e) {{}}
+    }}
+    loadPost();
+    </script>
+    """
 
 def gen_inner_header(title):
     return f"""<section class="hero" style="min-height: 40vh; background:var(--p);"><div class="container"><h1>{title}</h1></div></section>"""
@@ -962,15 +1035,42 @@ if show_testimonials:
 if show_faq: home_content += gen_faq_section()
 if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Start Owning Your Future</h2><p style="margin-bottom:2rem;">Stop paying rent.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get Started</a></div></section>'
 
-# --- 7. DEPLOYMENT ---
+# --- 7. DEPLOYMENT & RESTORED PREVIEW ---
 st.divider()
 st.subheader("🚀 Launchpad")
 
+# RESTORED RADIO BUTTONS FOR PREVIEW
+preview_mode = st.radio(
+    "Preview Page:", 
+    ["Home", "About", "Contact", "Blog Index", "Blog Post (Demo)", "Privacy", "Terms", "Product Detail (Demo)", "Booking Page"], 
+    horizontal=True
+)
+
 c1, c2 = st.columns([3, 1])
 with c1:
-    st.components.v1.html(build_page("Home", home_content), height=600, scrolling=True)
+    # PREVIEW LOGIC
+    if preview_mode == "Home": 
+        st.components.v1.html(build_page("Home", home_content), height=600, scrolling=True)
+    elif preview_mode == "About": 
+        st.components.v1.html(build_page("About", f"{gen_inner_header('About')}<div class='container'>{format_text(about_long)}</div>"), height=600, scrolling=True)
+    elif preview_mode == "Contact": 
+        st.components.v1.html(build_page("Contact", f"{gen_inner_header('Contact')}<div class='container'><h2>Email: {biz_email}</h2></div>"), height=600, scrolling=True)
+    elif preview_mode == "Privacy": 
+        st.components.v1.html(build_page("Privacy", f"{gen_inner_header('Privacy')}<div class='container'>{format_text(priv_txt)}</div>"), height=600, scrolling=True)
+    elif preview_mode == "Terms": 
+        st.components.v1.html(build_page("Terms", f"{gen_inner_header('Terms')}<div class='container'>{format_text(term_txt)}</div>"), height=600, scrolling=True)
+    elif preview_mode == "Blog Index": 
+        st.components.v1.html(build_page("Blog", gen_blog_index_html()), height=600, scrolling=True)
+    elif preview_mode == "Blog Post (Demo)": 
+        st.components.v1.html(build_page("Article", gen_blog_post_html()), height=600, scrolling=True)
+    elif preview_mode == "Product Detail (Demo)":
+        st.info("ℹ️ Demo Mode Active: Showing the first available product from your CSV.")
+        st.components.v1.html(build_page("Product Name", gen_product_page_content(is_demo=True)), height=600, scrolling=True)
+    elif preview_mode == "Booking Page":
+        st.components.v1.html(build_page("Book Now", gen_booking_content()), height=600, scrolling=True)
 
 with c2:
+    st.success("System Ready.")
     if st.button("DOWNLOAD WEBSITE ZIP", type="primary"):
         z_b = io.BytesIO()
         with zipfile.ZipFile(z_b, "a", zipfile.ZIP_DEFLATED, False) as zf:
@@ -983,6 +1083,8 @@ with c2:
             
             # Feature Pages
             zf.writestr("booking.html", build_page("Book Now", gen_booking_content()))
+            zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
+            
             if show_blog: 
                 zf.writestr("blog.html", build_page("Blog", gen_blog_index_html()))
                 zf.writestr("post.html", build_page("Article", gen_blog_post_html()))
@@ -991,4 +1093,4 @@ with c2:
             zf.writestr("manifest.json", gen_pwa_manifest())
             zf.writestr("service-worker.js", gen_sw())
 
-        st.download_button("📥 Save Site", z_b.getvalue(), f"{biz_name}_v35.zip", "application/zip")
+        st.download_button("📥 Click to Save", z_b.getvalue(), f"{biz_name.lower().replace(' ','_')}_site.zip", "application/zip")
